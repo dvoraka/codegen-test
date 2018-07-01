@@ -4,6 +4,7 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,6 +16,10 @@ import java.io.Serializable;
 @SpringBootApplication
 public class TestApplication {
 
+    @Autowired
+    private ServiceGenerator serviceGenerator;
+
+
     public static void main(String[] args) {
         SpringApplication.run(TestApplication.class, args);
     }
@@ -22,6 +27,8 @@ public class TestApplication {
     @Bean
     public CommandLineRunner runner() {
         return (args) -> {
+
+            System.out.println(serviceGenerator);
 
             TypeSpec serviceInterface = TypeSpec.interfaceBuilder("BaseInterface")
                     .build();
