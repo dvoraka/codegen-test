@@ -1,5 +1,6 @@
 package dvoraka.codegen.test;
 
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
@@ -9,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import javax.lang.model.element.Modifier;
+import java.io.Serializable;
 
 @SpringBootApplication
 public class TestApplication {
@@ -20,6 +22,35 @@ public class TestApplication {
     @Bean
     public CommandLineRunner runner() {
         return (args) -> {
+
+            TypeSpec serviceInterface = TypeSpec.interfaceBuilder("BaseInterface")
+                    .build();
+
+            JavaFile javaFile = JavaFile.builder("com.example.helloworld", serviceInterface)
+                    .build();
+
+            javaFile.writeTo(System.out);
+            System.out.println("***");
+
+            serviceInterface = TypeSpec.interfaceBuilder("ServiceInterface")
+                    .addSuperinterface(Serializable.class)
+                    .build();
+
+            javaFile = JavaFile.builder("com.example.helloworld", serviceInterface)
+                    .build();
+
+            javaFile.writeTo(System.out);
+            System.out.println("***");
+
+            serviceInterface = TypeSpec.interfaceBuilder("ServiceInterface")
+                    .addSuperinterface(ClassName.get("com.example.helloworld.interface", "TestInterface"))
+                    .build();
+
+            javaFile = JavaFile.builder("com.example.helloworld", serviceInterface)
+                    .build();
+
+            javaFile.writeTo(System.out);
+            System.out.println("***");
 
             MethodSpec main = MethodSpec.methodBuilder("main")
                     .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
@@ -33,7 +64,7 @@ public class TestApplication {
                     .addMethod(main)
                     .build();
 
-            JavaFile javaFile = JavaFile.builder("com.example.helloworld", helloWorld)
+            javaFile = JavaFile.builder("com.example.helloworld", helloWorld)
                     .build();
 
             javaFile.writeTo(System.out);
