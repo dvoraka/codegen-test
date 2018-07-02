@@ -61,6 +61,7 @@ public class ServiceGenerator {
         TypeSpec serviceImpl = TypeSpec.classBuilder(serviceImplementationName)
                 .addModifiers(Modifier.PUBLIC)
                 .addSuperinterface(ClassName.get(servicePackageName, serviceInterfaceName))
+                .addAnnotation(Service.class)
                 .build();
 
         javaFile = JavaFile.builder(servicePackageName, serviceImpl)
@@ -69,5 +70,18 @@ public class ServiceGenerator {
         javaFile.writeTo(System.out);
         System.out.println("***");
         System.out.println("===");
+    }
+
+    private String buildPackage(String... packages) {
+
+        StringBuilder packageName = new StringBuilder();
+        for (String name : packages) {
+            packageName.append(name);
+            packageName.append(".");
+        }
+
+        packageName.deleteCharAt(packageName.length() - 1);
+
+        return packageName.toString();
     }
 }
