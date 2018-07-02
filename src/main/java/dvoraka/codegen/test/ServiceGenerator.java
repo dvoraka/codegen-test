@@ -32,10 +32,10 @@ public class ServiceGenerator {
 
         serviceName = "cool";
         packageName = basePackageName + "." + serviceName;
-        servicePackageName = packageName + "." + "service";
+        servicePackageName = buildPackage(packageName, "service");
 
         baseInterfaceName = "BaseInterface";
-        baseInterfacePackageName = basePackageName + "." + "common.service";
+        baseInterfacePackageName = buildPackage(basePackageName, "common.service");
 
         serviceInterfaceName = StringUtils.capitalize(serviceName) + "Service";
         serviceImplementationName = "Default" + serviceInterfaceName;

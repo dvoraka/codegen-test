@@ -40,26 +40,6 @@ public class TestApplication {
             javaFile.writeTo(System.out);
             System.out.println("***");
 
-            serviceInterface = TypeSpec.interfaceBuilder("ServiceInterface")
-                    .addSuperinterface(Serializable.class)
-                    .build();
-
-            javaFile = JavaFile.builder("com.example.helloworld", serviceInterface)
-                    .build();
-
-            javaFile.writeTo(System.out);
-            System.out.println("***");
-
-            serviceInterface = TypeSpec.interfaceBuilder("ServiceInterface")
-                    .addSuperinterface(ClassName.get("com.example.helloworld.interface", "TestInterface"))
-                    .build();
-
-            javaFile = JavaFile.builder("com.example.helloworld", serviceInterface)
-                    .build();
-
-            javaFile.writeTo(System.out);
-            System.out.println("***");
-
             MethodSpec main = MethodSpec.methodBuilder("main")
                     .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                     .returns(void.class)
