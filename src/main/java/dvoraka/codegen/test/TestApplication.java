@@ -29,6 +29,7 @@ public class TestApplication {
         return (args) -> {
 
             System.out.println(serviceGenerator);
+            serviceGenerator.generate();
 
             TypeSpec serviceInterface = TypeSpec.interfaceBuilder("BaseInterface")
                     .build();
