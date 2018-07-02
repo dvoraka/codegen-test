@@ -26,6 +26,9 @@ public class ServiceGenerator {
     private final String serviceInterfaceName;
     private final String serviceImplementationName;
 
+    private final String serverClassName;
+    private final String serverBaseClasName;
+
 
     public ServiceGenerator() {
         basePackageName = "test";
@@ -39,6 +42,9 @@ public class ServiceGenerator {
 
         serviceInterfaceName = StringUtils.capitalize(serviceName) + "Service";
         serviceImplementationName = "Default" + serviceInterfaceName;
+
+        serverClassName = StringUtils.capitalize(serviceName) + "Server";
+        serverBaseClasName = "AbstractServer";
     }
 
     public void generate() throws IOException {
@@ -69,6 +75,20 @@ public class ServiceGenerator {
 
         javaFile.writeTo(System.out);
         System.out.println("***");
+
+        // server
+        TypeSpec server = TypeSpec.classBuilder(serverClassName)
+                .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+                .superclass(ClassName.get(packageName, serverBaseClasName))
+                .addAnnotation(Service.class)
+                .build();
+
+        javaFile = JavaFile.builder(packageName, server)
+                .build();
+
+        javaFile.writeTo(System.out);
+        System.out.println("***");
+
         System.out.println("===");
     }
 
