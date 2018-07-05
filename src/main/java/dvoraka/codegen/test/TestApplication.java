@@ -1,6 +1,5 @@
 package dvoraka.codegen.test;
 
-import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
@@ -11,7 +10,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import javax.lang.model.element.Modifier;
-import java.io.Serializable;
 
 @SpringBootApplication
 public class TestApplication {
