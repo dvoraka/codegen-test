@@ -68,24 +68,29 @@ public class TestApplication {
                     .parent(null)
                     .build();
 
-            Directory services = new Directory.DirectoryBuilder("service")
-                    .dirType(DirType.SERVICES)
+            Directory abstractService = new Directory.DirectoryBuilder("dvoraka.common.service")
+                    .dirType(DirType.SERVICE_ABSTRACT)
                     .parent(baseDir)
                     .build();
 
-            Directory services2 = new Directory.DirectoryBuilder("nestedservice")
-                    .dirType(DirType.SERVICES)
-                    .parent(services)
+            Directory service = new Directory.DirectoryBuilder("service")
+                    .dirType(DirType.SERVICE)
+                    .parent(baseDir)
                     .build();
 
-            System.out.println(baseDir);
+            Directory serviceImpl = new Directory.DirectoryBuilder("service")
+                    .dirType(DirType.SERVICE_IMPL)
+                    .parent(baseDir)
+                    .build();
+
+//            System.out.println(baseDir);
 
             processDirs(baseDir);
 
             String json = objectMapper.writeValueAsString(baseDir);
-            Files.write(Paths.get("test.json"), json.getBytes(), StandardOpenOption.CREATE);
+            Files.write(Paths.get("test.json"), json.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 
-            System.out.println(findByType(DirType.SERVICES, services2));
+            System.out.println(findByType(DirType.SERVICE_ABSTRACT, service));
         };
     }
 

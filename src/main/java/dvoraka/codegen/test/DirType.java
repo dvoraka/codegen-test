@@ -2,5 +2,7 @@ package dvoraka.codegen.test;
 
 public enum DirType {
     BASE,
-    SERVICES
+    SERVICE_ABSTRACT,
+    SERVICE,
+    SERVICE_IMPL
 }
