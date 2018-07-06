@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import javax.lang.model.element.Modifier;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -81,14 +82,13 @@ public class TestApplication {
             processDirs(baseDir);
 
             String json = objectMapper.writeValueAsString(baseDir);
-//            System.out.println(json);
             Files.write(Paths.get("test.json"), json.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
         };
     }
 
     public void processDirs(Directory root) {
         if (root.getChildren().isEmpty()) {
-            process(root);
+            processLeaf(root);
         } else {
             for (Directory dir : root.getChildren()) {
                 processDirs(dir);
@@ -99,5 +99,18 @@ public class TestApplication {
 
     public void process(Directory directory) {
         System.out.println("Processing " + directory.getName() + "...");
+    }
+
+    public void processLeaf(Directory directory) {
+        try {
+            Files.createDirectories(Paths.get(pkg2path(directory.getPackageName())));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        process(directory);
+    }
+
+    public String pkg2path(String packageName) {
+        return packageName.replace('.', '/');
     }
 }
