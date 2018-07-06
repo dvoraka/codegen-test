@@ -54,6 +54,18 @@ public class TestApplication {
                     .build();
 
             javaFile.writeTo(System.out);
+
+            Directory baseDir = new Directory.DirectoryBuilder()
+                    .dirType(DirType.BASE)
+                    .parent(null)
+                    .build();
+
+            Directory services = new Directory.DirectoryBuilder()
+                    .dirType(DirType.SERVICES)
+                    .parent(baseDir)
+                    .build();
+
+            System.out.println(baseDir);
         };
     }
 }
