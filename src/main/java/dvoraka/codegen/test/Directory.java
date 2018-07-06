@@ -25,6 +25,14 @@ public class Directory {
         children.add(directory);
     }
 
+    public String getPackageName() {
+        if (getParent() == null) {
+            return getName();
+        } else {
+            return getParent().getPackageName() + "." + getName();
+        }
+    }
+
     @Override
     public String toString() {
         return "Directory{" +
@@ -41,6 +49,10 @@ public class Directory {
         private Directory parent;
         private DirType dirType;
 
+
+        public DirectoryBuilder(String name) {
+            this.name = name;
+        }
 
         public DirectoryBuilder name(String name) {
             this.name = name;

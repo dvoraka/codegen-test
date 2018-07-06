@@ -55,17 +55,25 @@ public class TestApplication {
 
             javaFile.writeTo(System.out);
 
-            Directory baseDir = new Directory.DirectoryBuilder()
+            Directory baseDir = new Directory.DirectoryBuilder("dvoraka.cool")
                     .dirType(DirType.BASE)
                     .parent(null)
                     .build();
 
-            Directory services = new Directory.DirectoryBuilder()
+            Directory services = new Directory.DirectoryBuilder("service")
                     .dirType(DirType.SERVICES)
                     .parent(baseDir)
                     .build();
 
+            Directory services2 = new Directory.DirectoryBuilder("nestedservice")
+                    .dirType(DirType.SERVICES)
+                    .parent(services)
+                    .build();
+
             System.out.println(baseDir);
+
+            System.out.println(services.getPackageName());
+            System.out.println(services2.getPackageName());
         };
     }
 }
