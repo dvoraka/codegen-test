@@ -1,6 +1,7 @@
 package dvoraka.codegen.test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
@@ -9,6 +10,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Service;
 
 import javax.lang.model.element.Modifier;
 import java.io.IOException;
@@ -107,6 +109,34 @@ public class TestApplication {
 
     public void process(Directory directory) {
         System.out.println("Processing " + directory.getName() + "...");
+
+        JavaFile javaFile;
+        switch (directory.getDirType()) {
+            case SERVICE_IMPL:
+                TypeSpec serviceImpl = TypeSpec.classBuilder("DefaultService")
+                        .addModifiers(Modifier.PUBLIC)
+                        .addSuperinterface(ClassName.get(
+                                findByType(DirType.SERVICE, directory).get().getPackageName(),
+                                "BaseService"))
+                        .addAnnotation(Service.class)
+                        .build();
+
+                javaFile = JavaFile.builder(directory.getPackageName(), serviceImpl)
+                        .build();
+
+                try {
+                    javaFile.writeTo(System.out);
+                    Files.write(
+                            Paths.get(pkg2path(directory.getPackageName()) + "/DefaultService.java"),
+                            javaFile.toString().getBytes(),
+                            StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("***");
+
+                break;
+        }
     }
 
     public void processLeaf(Directory directory) {
