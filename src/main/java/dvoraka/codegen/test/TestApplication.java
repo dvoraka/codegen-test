@@ -110,10 +110,12 @@ public class TestApplication {
     }
 
     public void processLeaf(Directory directory) {
-        try {
-            Files.createDirectories(Paths.get(pkg2path(directory.getPackageName())));
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (!directory.getDirType().isAbstractType()) {
+            try {
+                Files.createDirectories(Paths.get(pkg2path(directory.getPackageName())));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         process(directory);
     }
