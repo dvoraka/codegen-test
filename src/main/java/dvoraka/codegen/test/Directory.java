@@ -1,6 +1,7 @@
 package dvoraka.codegen.test;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 
@@ -29,6 +30,7 @@ public class Directory {
         children.add(directory);
     }
 
+    @JsonIgnore
     public String getPackageName() {
         if (getParent() == null) {
             return getName();

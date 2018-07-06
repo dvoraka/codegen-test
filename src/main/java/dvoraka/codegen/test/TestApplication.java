@@ -11,6 +11,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import javax.lang.model.element.Modifier;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 @SpringBootApplication
 public class TestApplication {
@@ -75,13 +78,11 @@ public class TestApplication {
 
             System.out.println(baseDir);
 
-            System.out.println(services.getPackageName());
-            System.out.println(services2.getPackageName());
-
             processDirs(baseDir);
 
             String json = objectMapper.writeValueAsString(baseDir);
-            System.out.println(json);
+//            System.out.println(json);
+            Files.write(Paths.get("test.json"), json.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
         };
     }
 
