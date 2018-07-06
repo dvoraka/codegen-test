@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import javax.lang.model.element.Modifier;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -151,7 +152,7 @@ public class TestApplication {
     }
 
     public String pkg2path(String packageName) {
-        return packageName.replace('.', '/');
+        return packageName.replace('.', File.separatorChar);
     }
 
     public Optional<Directory> findByType(DirType type, Directory directory) {
