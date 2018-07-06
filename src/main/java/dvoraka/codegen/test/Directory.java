@@ -12,6 +12,7 @@ import java.util.List;
 public class Directory {
 
     private String name;
+    private String className;
 
     @JsonBackReference
     private Directory parent;
@@ -43,19 +44,10 @@ public class Directory {
         return parent == null;
     }
 
-    @Override
-    public String toString() {
-        return "Directory{" +
-                "name='" + name + '\'' +
-                ", parent=" + (parent == null ? "null" : parent.getName()) +
-                ", dirType=" + dirType +
-                ", children=" + children +
-                '}';
-    }
-
     public static final class DirectoryBuilder {
 
         private String name;
+        private String className;
         private Directory parent;
         private DirType dirType;
 
@@ -66,6 +58,11 @@ public class Directory {
 
         public DirectoryBuilder name(String name) {
             this.name = name;
+            return this;
+        }
+
+        public DirectoryBuilder className(String className) {
+            this.className = className;
             return this;
         }
 
@@ -83,6 +80,7 @@ public class Directory {
             Directory directory = new Directory();
             directory.dirType = this.dirType;
             directory.name = this.name;
+            directory.className = this.className;
             directory.parent = this.parent;
 
             if (directory.dirType != DirType.BASE) {
@@ -91,5 +89,16 @@ public class Directory {
 
             return directory;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Directory{" +
+                "name='" + name + '\'' +
+                ", className='" + className + '\'' +
+                ", parent=" + (parent == null ? "null" : parent.getName()) +
+                ", dirType=" + dirType +
+                ", children=" + children +
+                '}';
     }
 }

@@ -81,9 +81,10 @@ public class TestApplication {
                     .parent(baseDir)
                     .build();
 
-            Directory serviceImpl = new Directory.DirectoryBuilder("service")
+            Directory serviceImpl = new Directory.DirectoryBuilder("impl")
                     .dirType(DirType.SERVICE_IMPL)
-                    .parent(baseDir)
+                    .className("DefaultService")
+                    .parent(service)
                     .build();
 
 //            System.out.println(baseDir);
@@ -114,7 +115,7 @@ public class TestApplication {
         JavaFile javaFile;
         switch (directory.getDirType()) {
             case SERVICE_IMPL:
-                TypeSpec serviceImpl = TypeSpec.classBuilder("DefaultService")
+                TypeSpec serviceImpl = TypeSpec.classBuilder(directory.getClassName())
                         .addModifiers(Modifier.PUBLIC)
                         .addSuperinterface(ClassName.get(
                                 findByType(DirType.SERVICE, directory).get().getPackageName(),
@@ -128,7 +129,8 @@ public class TestApplication {
                 try {
                     javaFile.writeTo(System.out);
                     Files.write(
-                            Paths.get(pkg2path(directory.getPackageName()) + "/DefaultService.java"),
+                            Paths.get(pkg2path(directory.getPackageName())
+                                    + "/" + directory.getClassName() + ".java"),
                             javaFile.toString().getBytes(),
                             StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
                 } catch (IOException e) {
