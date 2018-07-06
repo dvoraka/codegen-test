@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Optional;
 
 @SpringBootApplication
 public class TestApplication {
@@ -82,7 +83,9 @@ public class TestApplication {
             processDirs(baseDir);
 
             String json = objectMapper.writeValueAsString(baseDir);
-            Files.write(Paths.get("test.json"), json.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
+            Files.write(Paths.get("test.json"), json.getBytes(), StandardOpenOption.CREATE);
+
+            System.out.println(findByType(DirType.SERVICES, services2));
         };
     }
 
@@ -112,5 +115,34 @@ public class TestApplication {
 
     public String pkg2path(String packageName) {
         return packageName.replace('.', '/');
+    }
+
+    public Optional<Directory> findByType(DirType type, Directory directory) {
+        Directory root = getRoot(directory);
+
+        return Optional.ofNullable(findByTypeFromRoot(type, root));
+    }
+
+    public Directory findByTypeFromRoot(DirType type, Directory root) {
+        if (root.getDirType() == type) {
+            return root;
+        } else {
+            for (Directory dir : root.getChildren()) {
+                Directory found = findByTypeFromRoot(type, dir);
+                if (found != null) {
+                    return found;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public Directory getRoot(Directory directory) {
+        if (directory.isRoot()) {
+            return directory;
+        } else {
+            return getRoot(directory.getParent());
+        }
     }
 }

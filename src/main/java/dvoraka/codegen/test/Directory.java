@@ -39,6 +39,10 @@ public class Directory {
         }
     }
 
+    boolean isRoot() {
+        return parent == null;
+    }
+
     @Override
     public String toString() {
         return "Directory{" +
