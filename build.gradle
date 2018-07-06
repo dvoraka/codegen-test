@@ -27,6 +27,7 @@ repositories {
 dependencies {
     // Spring
     compile('org.springframework.boot:spring-boot-starter')
+    compile('org.springframework.boot:spring-boot-starter-web')
 
     compile group: 'com.squareup', name: 'javapoet', version: '1.11.1'
 

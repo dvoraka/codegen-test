@@ -1,5 +1,7 @@
 package dvoraka.codegen.test;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -10,10 +12,12 @@ public class Directory {
 
     private String name;
 
+    @JsonBackReference
     private Directory parent;
 
     private DirType dirType;
 
+    @JsonManagedReference
     private List<Directory> children;
 
 

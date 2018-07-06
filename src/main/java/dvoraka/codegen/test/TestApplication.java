@@ -1,5 +1,6 @@
 package dvoraka.codegen.test;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
@@ -16,6 +17,8 @@ public class TestApplication {
 
     @Autowired
     private ServiceGenerator serviceGenerator;
+    @Autowired
+    private ObjectMapper objectMapper;
 
 
     public static void main(String[] args) {
@@ -76,6 +79,9 @@ public class TestApplication {
             System.out.println(services2.getPackageName());
 
             processDirs(baseDir);
+
+            String json = objectMapper.writeValueAsString(baseDir);
+            System.out.println(json);
         };
     }
 
