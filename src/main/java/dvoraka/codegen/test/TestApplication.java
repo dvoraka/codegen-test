@@ -74,6 +74,23 @@ public class TestApplication {
 
             System.out.println(services.getPackageName());
             System.out.println(services2.getPackageName());
+
+            processDirs(baseDir);
         };
+    }
+
+    public void processDirs(Directory root) {
+        if (root.getChildren().isEmpty()) {
+            process(root);
+        } else {
+            for (Directory dir : root.getChildren()) {
+                processDirs(dir);
+            }
+            process(root);
+        }
+    }
+
+    public void process(Directory directory) {
+        System.out.println("Processing " + directory.getName() + "...");
     }
 }
