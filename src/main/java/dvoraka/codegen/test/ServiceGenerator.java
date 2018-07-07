@@ -4,6 +4,7 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
+import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import lombok.ToString;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import javax.lang.model.element.Modifier;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.sql.RowId;
+import java.nio.file.DirectoryStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,23 +98,42 @@ public class ServiceGenerator {
         System.out.println("***");
 
         // service 2 implementation
-        Method methods[] = RowId.class.getDeclaredMethods();
+        Class<?> clazz = DirectoryStream.class;
+
+        Method methods[] = clazz.getDeclaredMethods();
         List<MethodSpec> methodSpecs = new ArrayList<>();
         for (Method m : methods) {
 
-            Type retType = m.getGenericReturnType();
-            Type[] parTypes = m.getGenericParameterTypes();
-            if (parTypes.length == 0) {
+            // skip default methods
+            if (m.isDefault()) {
                 continue;
             }
 
-            ParameterSpec parameterSpec = ParameterSpec.builder(parTypes[0], parTypes[0].getTypeName())
-                    .build();
+            // return type
+            Type retType = m.getGenericReturnType();
+            Type[] parTypes = m.getGenericParameterTypes();
+
+            // parameters
+            List<ParameterSpec> parSpecs = new ArrayList<>();
+            for (Type parType : parTypes) {
+                ParameterSpec parSpec = ParameterSpec.builder(parType, "par")
+                        .build();
+
+                parSpecs.add(parSpec);
+            }
+
+            // exceptions
+            Type[] exceptions = m.getGenericExceptionTypes();
+            List<TypeName> exceptionTypes = new ArrayList<>();
+            for (Type type : exceptions) {
+                exceptionTypes.add(TypeName.get(type));
+            }
 
             MethodSpec spec = MethodSpec.methodBuilder(m.getName())
                     .addAnnotation(Override.class)
                     .returns(retType)
-                    .addParameter(parameterSpec)
+                    .addParameters(parSpecs)
+                    .addExceptions(exceptionTypes)
                     .build();
 
             methodSpecs.add(spec);
@@ -121,7 +141,7 @@ public class ServiceGenerator {
 
         TypeSpec serviceImpl2 = TypeSpec.classBuilder("Impl")
                 .addModifiers(Modifier.PUBLIC)
-                .addSuperinterface(RowId.class)
+                .addSuperinterface(clazz)
                 .addAnnotation(Service.class)
                 .addMethods(methodSpecs)
                 .build();
