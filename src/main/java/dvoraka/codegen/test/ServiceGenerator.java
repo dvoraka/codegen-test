@@ -2,6 +2,8 @@ package dvoraka.codegen.test;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
 import lombok.ToString;
 import org.springframework.stereotype.Service;
@@ -9,6 +11,11 @@ import org.springframework.util.StringUtils;
 
 import javax.lang.model.element.Modifier;
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.sql.RowId;
+import java.util.ArrayList;
+import java.util.List;
 
 @ToString
 @Service
@@ -84,6 +91,42 @@ public class ServiceGenerator {
                 .build();
 
         javaFile = JavaFile.builder(packageName, server)
+                .build();
+
+        javaFile.writeTo(System.out);
+        System.out.println("***");
+
+        // service 2 implementation
+        Method methods[] = RowId.class.getDeclaredMethods();
+        List<MethodSpec> methodSpecs = new ArrayList<>();
+        for (Method m : methods) {
+
+            Type retType = m.getGenericReturnType();
+            Type[] parTypes = m.getGenericParameterTypes();
+            if (parTypes.length == 0) {
+                continue;
+            }
+
+            ParameterSpec parameterSpec = ParameterSpec.builder(parTypes[0], parTypes[0].getTypeName())
+                    .build();
+
+            MethodSpec spec = MethodSpec.methodBuilder(m.getName())
+                    .addAnnotation(Override.class)
+                    .returns(retType)
+                    .addParameter(parameterSpec)
+                    .build();
+
+            methodSpecs.add(spec);
+        }
+
+        TypeSpec serviceImpl2 = TypeSpec.classBuilder("Impl")
+                .addModifiers(Modifier.PUBLIC)
+                .addSuperinterface(RowId.class)
+                .addAnnotation(Service.class)
+                .addMethods(methodSpecs)
+                .build();
+
+        javaFile = JavaFile.builder(servicePackageName, serviceImpl2)
                 .build();
 
         javaFile.writeTo(System.out);

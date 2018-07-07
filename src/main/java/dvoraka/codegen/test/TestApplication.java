@@ -49,22 +49,22 @@ public class TestApplication {
             javaFile.writeTo(System.out);
             System.out.println("***");
 
-            MethodSpec main = MethodSpec.methodBuilder("main")
-                    .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                    .returns(void.class)
-                    .addParameter(String[].class, "args")
-                    .addStatement("$T.out.println($S)", System.class, "Hello, JavaPoet!")
-                    .build();
-
-            TypeSpec helloWorld = TypeSpec.classBuilder("HelloWorld")
-                    .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-                    .addMethod(main)
-                    .build();
-
-            javaFile = JavaFile.builder("com.example.helloworld", helloWorld)
-                    .build();
-
-            javaFile.writeTo(System.out);
+//            MethodSpec main = MethodSpec.methodBuilder("main")
+//                    .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+//                    .returns(void.class)
+//                    .addParameter(String[].class, "args")
+//                    .addStatement("$T.out.println($S)", System.class, "Hello, JavaPoet!")
+//                    .build();
+//
+//            TypeSpec helloWorld = TypeSpec.classBuilder("HelloWorld")
+//                    .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+//                    .addMethod(main)
+//                    .build();
+//
+//            javaFile = JavaFile.builder("com.example.helloworld", helloWorld)
+//                    .build();
+//
+//            javaFile.writeTo(System.out);
 
             Directory baseDir = new Directory.DirectoryBuilder("dvoraka.cool")
                     .dirType(DirType.BASE)
