@@ -16,6 +16,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.nio.file.DirectoryStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @ToString
@@ -101,6 +102,10 @@ public class ServiceGenerator {
         Class<?> clazz = DirectoryStream.class;
 
         Method methods[] = clazz.getDeclaredMethods();
+
+        // find super interface methods
+        System.out.println(findMethods(clazz));
+
         List<MethodSpec> methodSpecs = new ArrayList<>();
         for (Method m : methods) {
 
@@ -111,9 +116,9 @@ public class ServiceGenerator {
 
             // return type
             Type retType = m.getGenericReturnType();
-            Type[] parTypes = m.getGenericParameterTypes();
 
             // parameters
+            Type[] parTypes = m.getGenericParameterTypes();
             List<ParameterSpec> parSpecs = new ArrayList<>();
             for (Type parType : parTypes) {
                 ParameterSpec parSpec = ParameterSpec.builder(parType, "par")
@@ -166,5 +171,18 @@ public class ServiceGenerator {
         packageName.deleteCharAt(packageName.length() - 1);
 
         return packageName.toString();
+    }
+
+    public List<Method> findMethods(Class<?> clazz) {
+        if (clazz.getInterfaces().length == 0) {
+            return Arrays.asList(clazz.getDeclaredMethods());
+        }
+
+        List<Method> methods = new ArrayList<>();
+        for (Class<?> cls : clazz.getInterfaces()) {
+            methods.addAll(findMethods(cls));
+        }
+
+        return methods;
     }
 }
