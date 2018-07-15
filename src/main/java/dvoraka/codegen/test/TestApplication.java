@@ -3,7 +3,6 @@ package dvoraka.codegen.test;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -13,6 +12,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import javax.lang.model.element.Modifier;
+import javax.tools.JavaCompiler;
+import javax.tools.ToolProvider;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -95,7 +96,17 @@ public class TestApplication {
             Files.write(Paths.get("test.json"), json.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 
             System.out.println(findByType(DirType.SERVICE_ABSTRACT, service));
+
+            compileSource();
         };
+    }
+
+    public void compileSource() {
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+
+        System.out.println("Compiling source...");
+        int success = compiler.run(null, null, null, "Test.java");
+        System.out.println(success);
     }
 
     public void processDirs(Directory root) {
